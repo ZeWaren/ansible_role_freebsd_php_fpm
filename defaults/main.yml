@@ -1,0 +1,20 @@
+---
+php_version: 70
+php_fpm_remove_default_pool:
+  remove: yes
+  filename: www.conf
+php_fpm_conf: /usr/local/etc/php-fpm.conf
+php_fpm_d: /usr/local/etc/php-fpm.d
+php_fpm_service_name: php-fpm
+php_fpm_rc_var: php_fpm_enable
+php_fpm_enabled: yes
+php_fpm_started: yes
+php_fpm_pool_defaults:
+  pm: dynamic
+  pm.max_children: 5
+  pm.start_servers: 2
+  pm.min_spare_servers: 1
+  pm.max_spare_servers: 3
+
+php_fpm_pools: []
+php_fpm_modules: []

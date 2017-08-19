@@ -1,0 +1,44 @@
+---
+- name: Install php
+  pkgng: name=php{{ php_version }} state=present
+
+- name: Make sure the include directory is present
+  file: name={{ php_fpm_d }} state=directory
+
+- name: Ensure the include directory is included in the main config
+  ini_file:
+    dest: /usr/local/etc/php-fpm.conf
+    section: global
+    option: include
+    value: "/usr/local/etc/php-fpm.d/*.conf"
+
+- name: Delete the default pool configuration file
+  file: path={{ php_fpm_d }}/{{ php_fpm_remove_default_pool.filename }} state=absent
+  when: php_fpm_remove_default_pool.remove
+
+- name: Create the pools configurations
+  template: src=pool.conf.j2 dest={{ php_fpm_d }}/{{ item.name }}.conf
+  with_items: "{{ php_fpm_pools }}"
+  when: php_fpm_pools|length > 0
+  notify:
+   - restart php-fpm
+
+- name: Install the required module
+  pkgng: name=php{{ php_version }}-{{ item }} state=present
+  with_items: "{{ php_fpm_modules }}"
+
+- name: Enable the php-fpm service
+  sysrc: name={{ php_fpm_rc_var }} value="YES"
+  when: php_fpm_enabled
+
+- name: Disable the php-fpm service
+  sysrc: name={{ php_fpm_rc_var }} value="NO"
+  when: not php_fpm_enabled
+
+- name: Start the php-fpm service
+  service: name={{ php_fpm_service_name }} state=started
+  when: php_fpm_started
+
+- name: Stop the php-fpm service
+  service: name={{ php_fpm_service_name }} state=stopped
+  when: not php_fpm_started

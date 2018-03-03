@@ -18,3 +18,4 @@ php_fpm_pool_defaults:
 
 php_fpm_pools: []
 php_fpm_modules: []
+php_fpm_pecl_modules: []

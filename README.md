@@ -51,6 +51,10 @@ The configuration of each pool.
 
 Which PHP modules should be installed and loaded.
 
+### php_fpm_pecl_modules
+
+Which PECL modules should be installed and loaded.
+
 ## Example
 
 	php_version: 72
@@ -102,6 +106,8 @@ Which PHP modules should be installed and loaded.
 	  - iconv
 	  - zlib
 	  - openssl
+	php_fpm_pecl_modules:
+	  - redis
 
 ## Dependencies
 
